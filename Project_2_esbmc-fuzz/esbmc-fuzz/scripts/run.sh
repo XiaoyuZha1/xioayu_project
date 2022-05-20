@@ -1,0 +1,1 @@
+./ESBMC_Project/ESBMC_Project/release/bin/esbmc  --fuzz --fuzz-sanitize address  --fuzz-clang ./ESBMC_Project/ESBMC_Project/clang11/bin/clang++ --fuzz-compile "-L ./ESBMC_Project/ESBMC_Project/clang11/lib -L /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib"  test/fuzz_me.cpp

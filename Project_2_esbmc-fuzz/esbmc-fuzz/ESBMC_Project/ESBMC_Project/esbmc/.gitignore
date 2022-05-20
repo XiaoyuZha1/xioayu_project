@@ -1,0 +1,12 @@
+build
+cmake-*
+.idea
+.DS_Store
+__pycache__
+release
+
+.vs
+out
+.vscode
+
+tags

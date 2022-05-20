@@ -1,0 +1,80 @@
+$ ./ESBMC_Project/ESBMC_Project/release/bin/esbmc  --fuzz --fuzz-sanitize address  --fuzz-clang ./ESBMC_Project/ESBMC_Project/clang11/bin/clang++ --fuzz-compile "-L ./ESBMC_Project/ESBMC_Project/clang11/lib -L /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib" --fuzz-run "-seed=3918206239" test/fuzz_me.cpp
+./ESBMC_Project/ESBMC_Project/clang11/bin/clang++ -g -fsanitize=fuzzer,address -L ./ESBMC_Project/ESBMC_Project/clang11/lib -L /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib  test/fuzz_me.cpp
+a.out(92792,0x107bd0600) malloc: nano zone abandoned due to inability to preallocate reserved vm space.
+INFO: Seed: 3918206239
+INFO: Loaded 1 modules   (7 inline 8-bit counters): 7 [0x1007ae490, 0x1007ae497),
+INFO: Loaded 1 PC tables (7 PCs): 7 [0x1007ae498,0x1007ae508),
+INFO: -max_len is not provided; libFuzzer will not generate inputs larger than 4096 bytes
+INFO: A corpus is not provided, starting from an empty corpus
+#2	INITED cov: 3 ft: 3 corp: 1/1b exec/s: 0 rss: 38Mb
+#3	NEW    cov: 4 ft: 4 corp: 2/5b lim: 4 exec/s: 0 rss: 38Mb L: 4/4 MS: 1 CrossOver-
+#4	REDUCE cov: 4 ft: 4 corp: 2/4b lim: 4 exec/s: 0 rss: 39Mb L: 3/3 MS: 1 EraseBytes-
+#2425	REDUCE cov: 5 ft: 5 corp: 3/14b lim: 25 exec/s: 0 rss: 39Mb L: 10/10 MS: 1 InsertRepeatedBytes-
+#2540	REDUCE cov: 5 ft: 5 corp: 3/11b lim: 25 exec/s: 0 rss: 39Mb L: 7/7 MS: 5 ChangeBinInt-ChangeBit-ShuffleBytes-CopyPart-EraseBytes-
+#2651	REDUCE cov: 5 ft: 5 corp: 3/9b lim: 25 exec/s: 0 rss: 39Mb L: 5/5 MS: 1 EraseBytes-
+#2652	REDUCE cov: 5 ft: 5 corp: 3/7b lim: 25 exec/s: 0 rss: 39Mb L: 3/3 MS: 1 EraseBytes-
+#31325	REDUCE cov: 6 ft: 6 corp: 4/11b lim: 309 exec/s: 0 rss: 42Mb L: 4/4 MS: 3 EraseBytes-CopyPart-CMP- DE: "U\x00"-
+#31436	REDUCE cov: 6 ft: 6 corp: 4/10b lim: 309 exec/s: 0 rss: 42Mb L: 3/3 MS: 1 EraseBytes-
+=================================================================
+==92792==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x602000163a13 at pc 0x00010076d1da bp 0x7ff7bf795070 sp 0x7ff7bf795068
+READ of size 1 at 0x602000163a13 thread T0
+    #0 0x10076d1d9 in FuzzMe(unsigned char const*, unsigned long) fuzz_me.cpp:9
+    #1 0x10076d23a in LLVMFuzzerTestOneInput fuzz_me.cpp:13
+    #2 0x100788d80 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) FuzzerLoop.cpp:559
+    #3 0x1007884c5 in fuzzer::Fuzzer::RunOne(unsigned char const*, unsigned long, bool, fuzzer::InputInfo*, bool*) FuzzerLoop.cpp:471
+    #4 0x100789c11 in fuzzer::Fuzzer::MutateAndTestOne() FuzzerLoop.cpp:702
+    #5 0x10078a695 in fuzzer::Fuzzer::Loop(std::__1::vector<fuzzer::SizedFile, fuzzer::fuzzer_allocator<fuzzer::SizedFile> >&) FuzzerLoop.cpp:838
+    #6 0x1007785d2 in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) FuzzerDriver.cpp:847
+    #7 0x1007a4b92 in main FuzzerMain.cpp:20
+    #8 0x107b5551d in start+0x1cd (dyld:x86_64+0x551d)
+
+0x602000163a13 is located 0 bytes to the right of 3-byte region [0x602000163a10,0x602000163a13)
+allocated by thread T0 here:
+    #0 0x100b639dd in wrap__Znam+0x7d (libclang_rt.asan_osx_dynamic.dylib:x86_64h+0x519dd)
+    #1 0x100788c91 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) FuzzerLoop.cpp:544
+    #2 0x1007884c5 in fuzzer::Fuzzer::RunOne(unsigned char const*, unsigned long, bool, fuzzer::InputInfo*, bool*) FuzzerLoop.cpp:471
+    #3 0x100789c11 in fuzzer::Fuzzer::MutateAndTestOne() FuzzerLoop.cpp:702
+    #4 0x10078a695 in fuzzer::Fuzzer::Loop(std::__1::vector<fuzzer::SizedFile, fuzzer::fuzzer_allocator<fuzzer::SizedFile> >&) FuzzerLoop.cpp:838
+    #5 0x1007785d2 in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) FuzzerDriver.cpp:847
+    #6 0x1007a4b92 in main FuzzerMain.cpp:20
+    #7 0x107b5551d in start+0x1cd (dyld:x86_64+0x551d)
+
+SUMMARY: AddressSanitizer: heap-buffer-overflow fuzz_me.cpp:9 in FuzzMe(unsigned char const*, unsigned long)
+Shadow bytes around the buggy address:
+  0x1c040002c6f0: fa fa fd fa fa fa fd fa fa fa fd fa fa fa fd fa
+  0x1c040002c700: fa fa fd fa fa fa fd fa fa fa fd fa fa fa fd fa
+  0x1c040002c710: fa fa fd fa fa fa fd fa fa fa fd fd fa fa fd fa
+  0x1c040002c720: fa fa fd fa fa fa fd fa fa fa fd fa fa fa fd fa
+  0x1c040002c730: fa fa fd fa fa fa fd fa fa fa fd fd fa fa fd fa
+=>0x1c040002c740: fa fa[03]fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x1c040002c750: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x1c040002c760: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x1c040002c770: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x1c040002c780: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x1c040002c790: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+  Shadow gap:              cc
+==92792==ABORTING
+MS: 1 ChangeByte-; base unit: 1c12b63a941811b8a4940d6faa75a377401162a4
+0x46,0x55,0x5a,
+FUZ
+artifact_prefix='./'; Test unit written to ./crash-0eb8e4ed029b774d80f2b66408203801cb982a60
+Base64: RlVa
